@@ -95,6 +95,13 @@ with col3:
 with col4:
     st.session_state.englv = st.selectbox(label="英語レベル", options=ct.ENGLISH_LEVEL_OPTION, label_visibility="collapsed")
 
+# モード切替時や英語レベル変更時にも再作成
+if st.session_state.mode != st.session_state.pre_mode or st.session_state.englv != st.session_state.get("pre_englv", None):
+    st.session_state.chain_basic_conversation = ft.create_chain(
+        ct.SYSTEM_TEMPLATE_BASIC_CONVERSATION.format(englv=st.session_state.englv)
+    )
+    st.session_state.pre_englv = st.session_state.englv
+
 with st.chat_message("assistant", avatar="images/ai_icon.jpg"):
     st.markdown("こちらは生成AIによる音声英会話の練習アプリです。何度も繰り返し練習し、英語力をアップさせましょう。")
     st.markdown("**【操作説明】**")
