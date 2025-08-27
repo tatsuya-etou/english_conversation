@@ -18,6 +18,7 @@ from langchain.memory import ConversationSummaryBufferMemory
 from langchain_openai import ChatOpenAI
 from langchain.chains import ConversationChain
 import constants as ct
+import re
 
 def record_audio(audio_input_file_path):
     """
@@ -174,3 +175,15 @@ def create_evaluation():
     llm_response_evaluation = st.session_state.chain_evaluation.predict(input="")
 
     return llm_response_evaluation
+
+def preprocess_user_input(user_input):
+    # 前後の空白除去
+    text = user_input.strip()
+
+    # 不要な記号の除去（英語・数字・基本記号以外を削除）
+    text = re.sub(r"[^\w\s.,?!'\"-]", "", text)
+
+    # 連続スペースを単一スペースに変換
+    text = re.sub(r"\s+", " ", text)
+
+    return text

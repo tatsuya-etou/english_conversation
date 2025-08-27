@@ -168,7 +168,7 @@ if st.session_state.start_flg:
             with st.spinner('評価結果の生成中...'):
                 system_template = ct.SYSTEM_TEMPLATE_EVALUATION.format(
                     llm_text=st.session_state.problem,
-                    user_text=st.session_state.dictation_chat_message
+                    user_text=ft.preprocess_user_input(st.session_state.dictation_chat_message)
                 )
                 st.session_state.chain_evaluation = ft.create_chain(system_template)
                 # 問題文と回答を比較し、評価結果の生成を指示するプロンプトを作成
@@ -198,7 +198,7 @@ if st.session_state.start_flg:
         # 音声入力ファイルから文字起こしテキストを取得
         with st.spinner('音声入力をテキストに変換中...'):
             transcript = ft.transcribe_audio(audio_input_file_path)
-            audio_input_text = transcript.text
+            audio_input_text = ft.preprocess_user_input(transcript.text)
 
         # 音声入力テキストの画面表示
         with st.chat_message("user", avatar=ct.USER_ICON_PATH):
